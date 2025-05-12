@@ -1,4 +1,8 @@
 {
+  "version": 2,
   "builds": [{ "src": "package.json", "use": "@vercel/node" }],
-  "routes": [{ "src": "/(.*)", "dest": "/server/index.js" }]
+  "routes": [
+    { "src": "/(.*)", "src": "dist/(.*)", "dest": "dist/$1" },
+    { "src": "/(.*)", "dest": "dist/server/index.js" }
+  ]
 }
