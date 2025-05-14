@@ -12,15 +12,15 @@ import { ArrowRight } from "lucide-react";
 import SEO from "@/components/ui/seo";
 export default function Home() {
   const seoProps = {
-    title: "Muhammad Hamad Raza - Full-Stack Developer Portfolio",
-    description: "Portfolio of Muhammad Hamad Raza, a passionate Full-Stack Developer with expertise in MERN stack and modern web technologies. Explore my projects, skills, and experience.",
-    keywords: "Muhammad Hamad Raza, Full-Stack Developer, MERN stack, web development, portfolio, projects, skills",
+    title: "Muhammad Hamid Raza - Full-Stack Developer Portfolio",
+    description: "Portfolio of Muhammad Hamid Raza, a passionate Full-Stack Developer with expertise in MERN stack and modern web technologies. Explore my projects, skills, and experience.",
+    keywords: "Muhammad Hamid Raza, Full-Stack Developer, MERN stack, web development, portfolio, projects, skills",
     image: "/attached_assets/logo.png?v=1", // Replace with actual image URL
     url: "https://muhammadhamidraza.vercel.app/", // Replace with actual website URL
     schema: {
       "@context": "https://schema.org",
       "@type": "Person",
-      name: "Muhammad Hamad Raza",
+      name: "Muhammad Hamid Raza",
       jobTitle: "Full-Stack Developer",
       url: "https://muhammadhamidraza.vercel.app/",
       description: "A passionate Full-Stack Developer with expertise in MERN stack and over 2 years of experience in building intuitive, responsive, and user-focused applications.",

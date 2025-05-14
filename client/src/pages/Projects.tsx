@@ -124,15 +124,15 @@ const ProjectsPage: React.FC = () => {
   };
 
   const seoProps = {
-    title: "Projects by Muhammad Hamad Raza - Full-Stack Developer",
-    description: "Check out the projects by Muhammad Hamad Raza, a Full-Stack Developer, featuring innovative web applications built with MERN stack and modern technologies.",
-    keywords: "Muhammad Hamad Raza, Full-Stack Developer, projects, MERN stack, IPTV dashboard, real estate, YouTube downloader, admin dashboard, web development",
+    title: "Projects by Muhammad Hamid Raza - Full-Stack Developer",
+    description: "Check out the projects by Muhammad Hamid Raza, a Full-Stack Developer, featuring innovative web applications built with MERN stack and modern technologies.",
+    keywords: "Muhammad Hamid Raza, Full-Stack Developer, projects, MERN stack, IPTV dashboard, real estate, YouTube downloader, admin dashboard, web development",
     image: "/attached_assets/logo.png?v=1", // Replace with actual image URL
     url: "https://muhammadhamidraza.vercel.app/projects", // Replace with actual projects page URL
     schema: {
       "@context": "https://schema.org",
       "@type": "Person",
-      name: "Muhammad Hamad Raza",
+      name: "Muhammad Hamid Raza",
       jobTitle: "Full-Stack Developer",
       url: "https://muhammadhamidraza.vercel.app/projects",
       description: "A Full-Stack Developer showcasing projects like a Feature-Rich IPTV Dashboard, BuyHomeForLess real estate platform, YouTube Video Downloader, and Streamlined Admin Dashboard, built with React, Node.js, MongoDB, and more.",

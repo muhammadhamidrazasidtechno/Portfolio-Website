@@ -6,15 +6,15 @@ import SEO from "@/components/ui/seo";
 
 export default function SkillsPage() {
   const seoProps = {
-    title: "Skills & Expertise of Muhammad Hamad Raza - Full-Stack Developer",
-    description: "Explore the technical skills and expertise of Muhammad Hamad Raza, a Full-Stack Developer proficient in MERN stack, frontend, backend, and real-time communication technologies.",
-    keywords: "Muhammad Hamad Raza, Full-Stack Developer, MERN stack, skills, expertise, frontend, backend, database, real-time communication, web development",
+    title: "Skills & Expertise of Muhammad Hamid Raza - Full-Stack Developer",
+    description: "Explore the technical skills and expertise of Muhammad Hamid Raza, a Full-Stack Developer proficient in MERN stack, frontend, backend, and real-time communication technologies.",
+    keywords: "Muhammad Hamid Raza, Full-Stack Developer, MERN stack, skills, expertise, frontend, backend, database, real-time communication, web development",
     image: "/attached_assets/logo.png?v=1", // Replace with actual image URL
     url: "https://muhammadhamidraza.vercel.app/skills", // Replace with actual skills page URL
     schema: {
       "@context": "https://schema.org",
       "@type": "Person",
-      name: "Muhammad Hamad Raza",
+      name: "Muhammad Hamid Raza",
       jobTitle: "Full-Stack Developer",
       url: "https://muhammadhamidraza.vercel.app/skills",
       description: "A Full-Stack Developer with expertise in MERN stack, including frontend skills (HTML5, CSS3, JavaScript, React.js, Next.js), backend (Node.js, Express.js), databases (MongoDB), and real-time communication (Socket.io, WebSocket).",

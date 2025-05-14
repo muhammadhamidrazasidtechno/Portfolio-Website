@@ -6,15 +6,15 @@ import SEO from "@/components/ui/seo";
 
 export default function AboutPage() {
   const seoProps = {
-    title: "About Muhammad Hamad Raza - Full-Stack Developer",
-    description: "Learn about Muhammad Hamad Raza, a passionate Full-Stack Developer with over 2 years of experience in MERN stack and expertise in building intuitive web applications.",
-    keywords: "Muhammad Hamad Raza, Full-Stack Developer, MERN stack, professional experience, education, training, web development",
+    title: "About Muhammad Hamid Raza - Full-Stack Developer",
+    description: "Learn about Muhammad Hamid Raza, a passionate Full-Stack Developer with over 2 years of experience in MERN stack and expertise in building intuitive web applications.",
+    keywords: "Muhammad Hamid Raza, Full-Stack Developer, MERN stack, professional experience, education, training, web development",
     image: "/attached_assets/logo.png?v=1", // Replace with actual image URL
     url: "https://muhammadhamidraza.vercel.app/about", // Replace with actual about page URL
     schema: {
       "@context": "https://schema.org",
       "@type": "Person",
-      name: "Muhammad Hamad Raza",
+      name: "Muhammad Hamid Raza",
       jobTitle: "Full-Stack Developer",
       url: "https://muhammadhamidraza.vercel.app/about",
       description: "A passionate Full-Stack Developer with over 2 years of experience in MERN stack development, specializing in real-time applications and responsive UI/UX solutions. Educated at Saylani Mass IT Training with advanced web development and database management skills.",
