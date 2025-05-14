@@ -66,6 +66,13 @@ const projects: Project[] = [
     images: [Zwa, Zwa1, Zwa2, Zwa3],
     technologies: ["React", "Firebase", "Material-UI", "Chart.js", "Socket.io", "Node.js", "Express"],
   },
+  {
+    title: "E-Commerce Platform",
+    description:
+      "A modern e-commerce platform with product listings, cart functionality, and secure payment integration for a seamless shopping experience.",
+    images: [RealState, RealState1, RealState2, RealState3], // Reuse images for demo
+    technologies: ["React", "Node.js", "MongoDB", "Stripe"],
+  },
 ];
 
 // Custom arrow components for the slider
@@ -87,9 +94,27 @@ const PrevArrow: React.FC<ArrowProps> = ({ onClick }) => (
   </button>
 );
 
+const PROJECTS_PER_PAGE = 4;
+
 const ProjectsPage: React.FC = () => {
+  const [currentPage, setCurrentPage] = useState(1);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+
+  // Calculate total pages
+  const totalPages = Math.ceil(projects.length / PROJECTS_PER_PAGE);
+
+  // Get projects for the current page
+  const startIndex = (currentPage - 1) * PROJECTS_PER_PAGE;
+  const paginatedProjects = projects.slice(startIndex, startIndex + PROJECTS_PER_PAGE);
+
+  // Handle page change
+  const handlePageChange = (page: number) => {
+    if (page >= 1 && page <= totalPages) {
+      setCurrentPage(page);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  };
 
   const openModal = (project: Project) => {
     setSelectedProject(project);
@@ -164,7 +189,7 @@ const ProjectsPage: React.FC = () => {
           </motion.div>
 
           <div className="grid md:grid-cols-2 gap-8">
-            {projects.map((project, index) => (
+            {paginatedProjects.map((project, index) => (
               <motion.div
                 key={project.title}
                 initial={{ opacity: 0, y: 20 }}
@@ -202,6 +227,38 @@ const ProjectsPage: React.FC = () => {
               </motion.div>
             ))}
           </div>
+
+          {/* Pagination Controls */}
+          {totalPages > 1 && (
+            <div className="flex justify-center items-center mt-8 gap-2">
+              <Button
+                variant="outline"
+                disabled={currentPage === 1}
+                onClick={() => handlePageChange(currentPage - 1)}
+                className="px-3 py-1"
+              >
+                <ChevronLeft className="h-5 w-5" />
+              </Button>
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                <Button
+                  key={page}
+                  variant={currentPage === page ? "default" : "outline"}
+                  onClick={() => handlePageChange(page)}
+                  className={`px-4 py-1 ${currentPage === page ? "bg-primary text-white" : ""}`}
+                >
+                  {page}
+                </Button>
+              ))}
+              <Button
+                variant="outline"
+                disabled={currentPage === totalPages}
+                onClick={() => handlePageChange(currentPage + 1)}
+                className="px-3 py-1"
+              >
+                <ChevronRight className="h-5 w-5" />
+              </Button>
+            </div>
+          )}
         </div>
       </main>
 
