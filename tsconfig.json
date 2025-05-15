@@ -1,23 +1,30 @@
 {
-  "include": ["client/src/**/*", "shared/**/*", "server/**/*"],
+  "include": ["client/src/**/*", "shared/**/*", "server/**/*", "api/**/*"],
   "exclude": ["node_modules", "build", "dist", "**/*.test.ts"],
   "compilerOptions": {
     "incremental": true,
-    "tsBuildInfoFile": "./node_modules/typescript/tsbuildinfo",
-    "noEmit": true,
-    "module": "ESNext",
-    "strict": true,
-    "lib": ["esnext", "dom", "dom.iterable"],
-    "jsx": "preserve",
-    "esModuleInterop": true,
-    "skipLibCheck": true,
-    "allowImportingTsExtensions": true,
-    "moduleResolution": "bundler",
-    "baseUrl": ".",
-    "types": ["node", "vite/client"],
+    "tsBuildInfoFile": "./.tsbuildinfo", // Move build info out of node_modules
+    "noEmit": false, // Allow emitting .js files for Vercel
+    "emitDeclarationOnly": false, // Ensure .js files are generated
+    "target": "ESNext", // Modern JavaScript target
+    "module": "ESNext", // Use ESNext modules
+    "strict": true, // Enforce strict type checking
+    "lib": ["esnext", "dom", "dom.iterable"], // Libraries for frontend and Node.js
+    "jsx": "preserve", // Preserve JSX for Vite/React
+    "esModuleInterop": true, // Improve interop between CommonJS and ES Modules
+    "skipLibCheck": true, // Skip type checking of declaration files
+    "allowImportingTsExtensions": true, // Allow importing .ts files directly
+    "moduleResolution": "bundler", // Use bundler resolution for Vite
+    "baseUrl": ".", // Base directory for path resolution
+    "outDir": "dist", // Output directory for compiled files (for Vercel)
+    "rootDir": ".", // Root directory for source files
+    "types": ["node", "vite/client", "@vercel/node"], // Add Vercel Node types
     "paths": {
-      "@/*": ["./client/src/*"],
-      "@shared/*": ["./shared/*"]
-    }
+      "@/*": ["./client/src/*"], // Alias for client source
+      "@shared/*": ["./shared/*"] // Alias for shared types
+    },
+    "resolveJsonModule": true, // Allow importing JSON modules
+    "isolatedModules": true, // Ensure compatibility with Vite
+    "forceConsistentCasingInFileNames": true // Enforce consistent file casing
   }
 }
