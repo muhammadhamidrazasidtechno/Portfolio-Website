@@ -54,35 +54,44 @@ export class MemStorage implements IStorage {
     this.skills = new Map();
     this.projects = new Map();
     this.currentId = 1;
+    console.log("MemStorage initialized"); // Log initialization
   }
 
   // Messages
   async getMessage(id: number): Promise<Message | undefined> {
-    return this.messages.get(id);
+    const message = this.messages.get(id);
+    if (!message) console.log(`Message ${id} not found`);
+    return message;
   }
 
   async createMessage(insertMessage: InsertMessage): Promise<Message> {
     const id = this.currentId++;
     const message: Message = { ...insertMessage, id };
     this.messages.set(id, message);
+    console.log(`Created message with ID: ${id}`);
     return message;
   }
 
   // Users
   async getUser(id: number): Promise<User | undefined> {
-    return this.users.get(id);
+    const user = this.users.get(id);
+    if (!user) console.log(`User ${id} not found`);
+    return user;
   }
 
   async getUserByUsername(username: string): Promise<User | undefined> {
-    return Array.from(this.users.values()).find(
-      (user) => user.username === username
+    const user = Array.from(this.users.values()).find(
+      (u) => u.username === username
     );
+    if (!user) console.log(`User with username ${username} not found`);
+    return user;
   }
 
   async createUser(insertUser: InsertUser): Promise<User> {
     const id = this.currentId++;
     const user: User = { ...insertUser, id, isAdmin: false };
     this.users.set(id, user);
+    console.log(`Created user with ID: ${id}`);
     return user;
   }
 
@@ -92,13 +101,16 @@ export class MemStorage implements IStorage {
   }
 
   async getSkill(id: number): Promise<Skill | undefined> {
-    return this.skills.get(id);
+    const skill = this.skills.get(id);
+    if (!skill) console.log(`Skill ${id} not found`);
+    return skill;
   }
 
   async createSkill(insertSkill: InsertSkill): Promise<Skill> {
     const id = this.currentId++;
     const skill: Skill = { ...insertSkill, id, createdAt: new Date() };
     this.skills.set(id, skill);
+    console.log(`Created skill with ID: ${id}`);
     return skill;
   }
 
@@ -107,15 +119,16 @@ export class MemStorage implements IStorage {
     updateData: Partial<InsertSkill>
   ): Promise<Skill> {
     const skill = this.skills.get(id);
-    if (!skill) throw new Error("Skill not found");
-
+    if (!skill) throw new Error(`Skill ${id} not found`);
     const updatedSkill = { ...skill, ...updateData };
     this.skills.set(id, updatedSkill);
+    console.log(`Updated skill with ID: ${id}`);
     return updatedSkill;
   }
 
   async deleteSkill(id: number): Promise<void> {
-    this.skills.delete(id);
+    if (!this.skills.delete(id))
+      console.log(`Skill ${id} not deleted (not found)`);
   }
 
   // Projects
@@ -124,13 +137,16 @@ export class MemStorage implements IStorage {
   }
 
   async getProject(id: number): Promise<Project | undefined> {
-    return this.projects.get(id);
+    const project = this.projects.get(id);
+    if (!project) console.log(`Project ${id} not found`);
+    return project;
   }
 
   async createProject(insertProject: InsertProject): Promise<Project> {
     const id = this.currentId++;
     const project: Project = { ...insertProject, id, createdAt: new Date() };
     this.projects.set(id, project);
+    console.log(`Created project with ID: ${id}`);
     return project;
   }
 
@@ -139,15 +155,16 @@ export class MemStorage implements IStorage {
     updateData: Partial<InsertProject>
   ): Promise<Project> {
     const project = this.projects.get(id);
-    if (!project) throw new Error("Project not found");
-
+    if (!project) throw new Error(`Project ${id} not found`);
     const updatedProject = { ...project, ...updateData };
     this.projects.set(id, updatedProject);
+    console.log(`Updated project with ID: ${id}`);
     return updatedProject;
   }
 
   async deleteProject(id: number): Promise<void> {
-    this.projects.delete(id);
+    if (!this.projects.delete(id))
+      console.log(`Project ${id} not deleted (not found)`);
   }
 
   // About
@@ -158,6 +175,7 @@ export class MemStorage implements IStorage {
   async updateAbout(insertAbout: InsertAbout): Promise<About> {
     const id = 1; // Single about record
     this.about = { ...insertAbout, id, updatedAt: new Date() };
+    console.log(`Updated about with ID: ${id}`);
     return this.about;
   }
 }

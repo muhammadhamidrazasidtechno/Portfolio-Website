@@ -8,12 +8,10 @@ import {
 } from "@shared/schema";
 import nodemailer from "nodemailer";
 
-// Load environment variables
 const EMAIL_USER = process.env.EMAIL_USER || "hamidsidtechno@gmail.com";
 const EMAIL_PASS = process.env.EMAIL_PASS || "lwtq pbtn fzrb exia";
 const EMAIL_RECEIVER = process.env.EMAIL_RECEIVER || "hamidsidtechno@gmail.com";
 
-// Contact form handler
 export async function handleContact(req: VercelRequest, res: VercelResponse) {
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed" });
@@ -22,35 +20,52 @@ export async function handleContact(req: VercelRequest, res: VercelResponse) {
   try {
     const data = insertMessageSchema.parse(req.body);
     console.log("Received contact form data:", data);
-    const message = await storage.createMessage(data);
 
-    const transporter = nodemailer.createTransport({
-      service: "gmail",
-      auth: {
-        user: EMAIL_USER,
-        pass: EMAIL_PASS,
-      },
-    });
+    // Database operation
+    let message;
+    try {
+      message = await storage.createMessage(data);
+    } catch (dbError) {
+      console.error("Database error in createMessage:", dbError);
+      throw new Error("Failed to save message to database");
+    }
 
-    const mailOptions = {
-      from: data.email,
-      to: EMAIL_RECEIVER,
-      subject: "New Contact Form Submission",
-      text: `
-        You have received a new contact message:
-        Name: ${data.name}
-        Email: ${data.email}
-        Message: ${data.message}
-      `,
-    };
+    // Email operation
+    try {
+      const transporter = nodemailer.createTransport({
+        service: "gmail",
+        auth: { user: EMAIL_USER, pass: EMAIL_PASS },
+      });
 
-    await transporter.sendMail(mailOptions);
+      const mailOptions = {
+        from: data.email,
+        to: EMAIL_RECEIVER,
+        subject: "New Contact Form Submission",
+        text: `
+          You have received a new contact message:
+          Name: ${data.name}
+          Email: ${data.email}
+          Message: ${data.message}
+        `,
+      };
+
+      await transporter.sendMail(mailOptions);
+    } catch (emailError) {
+      console.error("Nodemailer error:", emailError);
+      throw new Error("Failed to send email");
+    }
+
     res
       .status(200)
       .json({ success: true, message: "Message received and email sent!" });
   } catch (error) {
     console.error("Contact form error:", error);
-    res.status(400).json({ error: "Invalid message data or email failed" });
+    res.status(400).json({
+      error:
+        error instanceof Error
+          ? error.message
+          : "Invalid message data or email failed",
+    });
   }
 }
 
@@ -126,7 +141,7 @@ export async function handleDeleteSkills(
   }
 }
 
-// Admin - Projects handlers (similarly implemented)
+// Admin - Projects handlers
 export async function handleGetProjects(
   req: VercelRequest,
   res: VercelResponse
@@ -228,8 +243,3 @@ export async function handlePatchAbout(
     res.status(400).json({ error: "Invalid about data" });
   }
 }
-
-// Temporarily disable image upload until cloud storage is integrated
-// export async function handleUploadImages(req: VercelRequest, res: VercelResponse) {
-//   res.status(501).json({ error: 'Image upload not implemented yet' });
-// }

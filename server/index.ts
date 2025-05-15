@@ -13,47 +13,68 @@ import {
   handlePatchAbout,
 } from "./routes";
 
-// Helper function to log request details
 const log = (message: string) => console.log(message);
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   const { path, method } = req;
+  console.log(`Received request: ${method} ${path}`); // Log the path for debugging
   const start = Date.now();
 
   try {
-    // Route handling
-    if (path === "/api/contact" && method === "POST") {
+    // Normalize path for matching
+    const normalizedPath = path.toLowerCase();
+
+    if (normalizedPath === "/api/contact" && method === "POST") {
       return await handleContact(req, res);
-    } else if (path === "/api/admin/skills" && method === "GET") {
+    } else if (normalizedPath === "/api/admin/skills" && method === "GET") {
       return await handleGetSkills(req, res);
-    } else if (path === "/api/admin/skills" && method === "POST") {
+    } else if (normalizedPath === "/api/admin/skills" && method === "POST") {
       return await handlePostSkills(req, res);
-    } else if (path === "/api/admin/skills/:id" && method === "PATCH") {
-      req.query.id = req.query.id || req.params.id; // Adjust for Vercel params
+    } else if (
+      normalizedPath.startsWith("/api/admin/skills/") &&
+      method === "PATCH"
+    ) {
+      const id = normalizedPath.split("/").pop();
+      req.query.id = id;
       return await handlePatchSkills(req, res);
-    } else if (path === "/api/admin/skills/:id" && method === "DELETE") {
-      req.query.id = req.query.id || req.params.id;
+    } else if (
+      normalizedPath.startsWith("/api/admin/skills/") &&
+      method === "DELETE"
+    ) {
+      const id = normalizedPath.split("/").pop();
+      req.query.id = id;
       return await handleDeleteSkills(req, res);
-    } else if (path === "/api/admin/projects" && method === "GET") {
+    } else if (normalizedPath === "/api/admin/projects" && method === "GET") {
       return await handleGetProjects(req, res);
-    } else if (path === "/api/admin/projects" && method === "POST") {
+    } else if (normalizedPath === "/api/admin/projects" && method === "POST") {
       return await handlePostProjects(req, res);
-    } else if (path === "/api/admin/projects/:id" && method === "PATCH") {
-      req.query.id = req.query.id || req.params.id;
+    } else if (
+      normalizedPath.startsWith("/api/admin/projects/") &&
+      method === "PATCH"
+    ) {
+      const id = normalizedPath.split("/").pop();
+      req.query.id = id;
       return await handlePatchProjects(req, res);
-    } else if (path === "/api/admin/projects/:id" && method === "DELETE") {
-      req.query.id = req.query.id || req.params.id;
+    } else if (
+      normalizedPath.startsWith("/api/admin/projects/") &&
+      method === "DELETE"
+    ) {
+      const id = normalizedPath.split("/").pop();
+      req.query.id = id;
       return await handleDeleteProjects(req, res);
-    } else if (path === "/api/admin/about" && method === "GET") {
+    } else if (normalizedPath === "/api/admin/about" && method === "GET") {
       return await handleGetAbout(req, res);
-    } else if (path === "/api/admin/about" && method === "PATCH") {
+    } else if (normalizedPath === "/api/admin/about" && method === "PATCH") {
       return await handlePatchAbout(req, res);
     }
 
     res.status(404).json({ error: "Not Found" });
   } catch (error) {
     console.error("Server error:", error);
-    res.status(500).json({ error: "Internal Server Error" });
+    res.status(500).json({
+      error: "Internal Server Error",
+      details: error instanceof Error ? error.message : "Unknown error",
+    });
   } finally {
     const duration = Date.now() - start;
     if (path.startsWith("/api")) {
