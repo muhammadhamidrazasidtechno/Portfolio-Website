@@ -4,11 +4,14 @@ import themePlugin from "@replit/vite-plugin-shadcn-theme-json";
 import path, { dirname } from "path";
 import runtimeErrorOverlay from "@replit/vite-plugin-runtime-error-modal";
 import { fileURLToPath } from "url";
-
+import vercel from "vite-plugin-vercel";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 export default defineConfig({
-  plugins: [react(), runtimeErrorOverlay(), themePlugin()],
+  server: {
+    port: 5001 as unknown as number,
+  },
+  plugins: [react(), runtimeErrorOverlay(), themePlugin(), vercel()],
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "client", "src"),
