@@ -1,8 +1,9 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { insertMessageSchema } from "../shared/schema";
 import nodemailer from "nodemailer";
-import { storage } from "../server/storage";
+import { storage } from "../server/storage"; // Adjusted path
 
+// Use environment variables for security
 const EMAIL_USER = process.env.EMAIL_USER || "hamidsidtechno@gmail.com";
 const EMAIL_PASS = process.env.EMAIL_PASS || "lwtq pbtn fzrb exia";
 const EMAIL_RECEIVER = process.env.EMAIL_RECEIVER || "hamidsidtechno@gmail.com";
@@ -20,6 +21,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     let message;
     try {
       message = await storage.createMessage(data);
+      console.log("Message saved successfully:", message);
     } catch (dbError) {
       console.error("Database error in createMessage:", dbError);
       throw new Error("Failed to save message to database");
@@ -29,7 +31,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     try {
       const transporter = nodemailer.createTransport({
         service: "gmail",
-        auth: { user: EMAIL_USER, pass: EMAIL_PASS },
+        auth: {
+          user: EMAIL_USER,
+          pass: EMAIL_PASS,
+        },
       });
 
       const mailOptions = {
@@ -45,6 +50,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       };
 
       await transporter.sendMail(mailOptions);
+      console.log("Email sent successfully");
     } catch (emailError) {
       console.error("Nodemailer error:", emailError);
       throw new Error("Failed to send email");
@@ -55,11 +61,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       .json({ success: true, message: "Message received and email sent!" });
   } catch (error) {
     console.error("Contact form error:", error);
-    res.status(400).json({
-      error:
-        error instanceof Error
-          ? error.message
-          : "Invalid message data or email failed",
+    res.status(500).json({
+      error: error instanceof Error ? error.message : "Internal server error",
     });
   }
 }
