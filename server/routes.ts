@@ -13,9 +13,8 @@ import fs from "fs";
 
 // Load environment variables (recommended to use dotenv in production)
 const EMAIL_USER = "hamidsidtechno@gmail.com";
-const EMAIL_PASS = process.env.EMAIL_PASS || "lwtq pbtn fzrb exia";
-const EMAIL_RECEIVER =
-  process.env.EMAIL_RECEIVER || "mustafasidtechno@gmail.com";
+const EMAIL_PASS = "lwtq pbtn fzrb exia";
+const EMAIL_RECEIVER = "hamidsidtechno@gmail.com";
 
 // Ensure uploads directory exists
 const uploadDir = "uploads/";
