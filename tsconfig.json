@@ -13,7 +13,7 @@
     "jsx": "preserve", // Preserve JSX for Vite/React
     "esModuleInterop": true, // Improve interop between CommonJS and ES Modules
     "skipLibCheck": true, // Skip type checking of declaration files
-    "allowImportingTsExtensions": true, // Allow importing .ts files directly
+    "allowImportingTsExtensions": true,
     "moduleResolution": "bundler", // Use bundler resolution for Vite
     "baseUrl": ".", // Base directory for path resolution
     "outDir": "dist", // Output directory for compiled files (for Vercel)
