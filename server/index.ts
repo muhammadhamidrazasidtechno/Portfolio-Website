@@ -1,65 +1,74 @@
-import express, { type Request, Response, NextFunction } from "express";
-import { registerRoutes } from "./routes";
-import { setupVite, serveStatic, log } from "./vite";
+import type { VercelRequest, VercelResponse } from "@vercel/node";
+import {
+  handleContact,
+  handleGetSkills,
+  handlePostSkills,
+  handlePatchSkills,
+  handleDeleteSkills,
+  handleGetProjects,
+  handlePostProjects,
+  handlePatchProjects,
+  handleDeleteProjects,
+  handleGetAbout,
+  handlePatchAbout,
+} from "./routes";
 
-const app = express();
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+// Helper function to log request details
+const log = (message: string) => console.log(message);
 
-app.use((req, res, next) => {
+export default async function handler(req: VercelRequest, res: VercelResponse) {
+  const { path, method } = req;
   const start = Date.now();
-  const path = req.path;
-  let capturedJsonResponse: Record<string, any> | undefined = undefined;
 
-  const originalResJson = res.json;
-  res.json = function (bodyJson, ...args) {
-    capturedJsonResponse = bodyJson;
-    return originalResJson.apply(res, [bodyJson, ...args]);
-  };
+  try {
+    // Route handling
+    if (path === "/api/contact" && method === "POST") {
+      return await handleContact(req, res);
+    } else if (path === "/api/admin/skills" && method === "GET") {
+      return await handleGetSkills(req, res);
+    } else if (path === "/api/admin/skills" && method === "POST") {
+      return await handlePostSkills(req, res);
+    } else if (path === "/api/admin/skills/:id" && method === "PATCH") {
+      req.query.id = req.query.id || req.params.id; // Adjust for Vercel params
+      return await handlePatchSkills(req, res);
+    } else if (path === "/api/admin/skills/:id" && method === "DELETE") {
+      req.query.id = req.query.id || req.params.id;
+      return await handleDeleteSkills(req, res);
+    } else if (path === "/api/admin/projects" && method === "GET") {
+      return await handleGetProjects(req, res);
+    } else if (path === "/api/admin/projects" && method === "POST") {
+      return await handlePostProjects(req, res);
+    } else if (path === "/api/admin/projects/:id" && method === "PATCH") {
+      req.query.id = req.query.id || req.params.id;
+      return await handlePatchProjects(req, res);
+    } else if (path === "/api/admin/projects/:id" && method === "DELETE") {
+      req.query.id = req.query.id || req.params.id;
+      return await handleDeleteProjects(req, res);
+    } else if (path === "/api/admin/about" && method === "GET") {
+      return await handleGetAbout(req, res);
+    } else if (path === "/api/admin/about" && method === "PATCH") {
+      return await handlePatchAbout(req, res);
+    }
 
-  res.on("finish", () => {
+    res.status(404).json({ error: "Not Found" });
+  } catch (error) {
+    console.error("Server error:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  } finally {
     const duration = Date.now() - start;
     if (path.startsWith("/api")) {
-      let logLine = `${req.method} ${path} ${res.statusCode} in ${duration}ms`;
-      if (capturedJsonResponse) {
-        logLine += ` :: ${JSON.stringify(capturedJsonResponse)}`;
+      let logLine = `${method} ${path} ${res.statusCode} in ${duration}ms`;
+      if (res.getHeader("Content-Type")?.includes("application/json")) {
+        logLine += ` :: ${JSON.stringify(
+          res.getHeader("Content-Length")
+            ? res.getHeader("Content-Length")
+            : "unknown"
+        )}`;
       }
-
       if (logLine.length > 80) {
         logLine = logLine.slice(0, 79) + "…";
       }
-
       log(logLine);
     }
-  });
-
-  next();
-});
-
-(async () => {
-  const server = registerRoutes(app);
-
-  app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
-    const status = err.status || err.statusCode || 500;
-    const message = err.message || "Internal Server Error";
-
-    res.status(status).json({ message });
-    throw err;
-  });
-
-  // importantly only setup vite in development and after
-  // setting up all the other routes so the catch-all route
-  // doesn't interfere with the other routes
-  if (app.get("env") === "development") {
-    await setupVite(app, server);
-  } else {
-    serveStatic(app);
   }
-
-  // ALWAYS serve the app on port 5000
-  // this serves both the API and the client
-  const PORT = 5001;
-  server.listen(PORT, "0.0.0.0", () => {
-    log(`serving on port ${PORT}`);
-  });
-})();
+}
